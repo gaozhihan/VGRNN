@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import rotate
 from torch.distributions.uniform import Uniform
 from torch.distributions.normal import Normal
-from sklearn.datasets import fetch_mldata
+# from sklearn.datasets import fetch_mldata
 # from torch_geometric import nn as tgnn
 from input_data import load_data
 from preprocessing import preprocess_graph, construct_feed_dict, sparse_to_tuple, mask_test_edges
@@ -116,7 +116,8 @@ def scatter_(name, src, index, dim_size=None):
     op = getattr(torch_scatter, 'scatter_{}'.format(name))
     fill_value = -1e38 if name is 'max' else 0
 
-    out = op(src, index, 0, None, dim_size, fill_value)
+    # out = op(src, index, 0, None, dim_size, fill_value) # fill_value is only used in and before pytorch_scatter 1.3.0
+    out = op(src, index, 0, None, dim_size)
     if isinstance(out, tuple):
         out = out[0]
 
@@ -232,7 +233,7 @@ def mask_edges_det(adjs_list):
         num_test = int(np.floor(edges.shape[0] / 10.))
         num_val = int(np.floor(edges.shape[0] / 20.))
         
-        all_edge_idx = range(edges.shape[0])
+        all_edge_idx = list(range(edges.shape[0]))
         np.random.shuffle(all_edge_idx)
         val_edge_idx = all_edge_idx[:num_val]
         test_edge_idx = all_edge_idx[num_val:(num_val + num_test)]
@@ -443,26 +444,27 @@ def mask_edges_prd_new(adjs_list, adj_orig_dense_list):
 
 # # Enron dataset
 # with open('data/enron10/adj_time_list.pickle', 'rb') as handle:
-#     adj_time_list = pickle.load(handle)
-
+#     # adj_time_list = pickle.load(handle)
+#     adj_time_list = pickle.load(handle, encoding="latin1")
+#
 # with open('data/enron10/adj_orig_dense_list.pickle', 'rb') as handle:
-#     adj_orig_dense_list = pickle.load(handle)
+#     adj_orig_dense_list = pickle.load(handle, encoding="bytes")
 
 
-# # COLAB dataset
-# with open('data/dblp/adj_time_list.pickle', 'rb') as handle:
-#     adj_time_list = pickle.load(handle)
+# COLAB dataset
+with open('data/dblp/adj_time_list.pickle', 'rb') as handle:
+    adj_time_list = pickle.load(handle, encoding="latin1")
 
-# with open('data/dblp/adj_orig_dense_list.pickle', 'rb') as handle:
-#     adj_orig_dense_list = pickle.load(handle)
+with open('data/dblp/adj_orig_dense_list.pickle', 'rb') as handle:
+    adj_orig_dense_list = pickle.load(handle, encoding="bytes")
 
 
-# Facebook dataset
-with open('data/fb/adj_time_list.pickle', 'rb') as handle:
-    adj_time_list = pickle.load(handle)
-
-with open('data/fb/adj_orig_dense_list.pickle', 'rb') as handle:
-    adj_orig_dense_list = pickle.load(handle)
+# # Facebook dataset
+# with open('data/fb/adj_time_list.pickle', 'rb') as handle:
+#     adj_time_list = pickle.load(handle, encoding="latin1")
+#
+# with open('data/fb/adj_orig_dense_list.pickle', 'rb') as handle:
+#     adj_orig_dense_list = pickle.load(handle, encoding="bytes")
 
 
 # In[6]:
@@ -523,7 +525,7 @@ class GCNConv(MessagePassing):
         edge_weight = edge_weight.view(-1)
         assert edge_weight.size(0) == edge_index.size(1)
 
-        edge_index = add_self_loops(edge_index, num_nodes=x.size(0))
+        edge_index, _ = add_self_loops(edge_index, num_nodes=x.size(0))
         loop_weight = torch.full(
             (x.size(0), ),
             1 if not self.improved else 2,
@@ -580,7 +582,7 @@ class SAGEConv(torch.nn.Module):
 
     def forward(self, x, edge_index):
         edge_index, _ = remove_self_loops(edge_index)
-        edge_index = add_self_loops(edge_index, num_nodes=x.size(0))
+        edge_index, _ = add_self_loops(edge_index, num_nodes=x.size(0))
         
         x = x.unsqueeze(-1) if x.dim() == 1 else x
         row, col = edge_index
@@ -1006,7 +1008,7 @@ seq_start = 0
 seq_end = seq_len - 3
 tst_after = 0
 
-for k in range(1000):
+for k in range(3):
     optimizer.zero_grad()
     start_time = time.time()
     kld_loss, nll_loss, _, _, hidden_st = model(x_in[seq_start:seq_end]
