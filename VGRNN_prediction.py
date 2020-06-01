@@ -454,10 +454,11 @@ def mask_edges_prd_new(adjs_list, adj_orig_dense_list):
 # COLAB dataset
 with open('data/dblp/adj_time_list.pickle', 'rb') as handle:
     adj_time_list = pickle.load(handle, encoding="latin1")
+# list of 10 sparse tensors with size [315, 315]
 
 with open('data/dblp/adj_orig_dense_list.pickle', 'rb') as handle:
     adj_orig_dense_list = pickle.load(handle, encoding="bytes")
-
+# list of 10 tensors with size [315, 315]
 
 # # Facebook dataset
 # with open('data/fb/adj_time_list.pickle', 'rb') as handle:
@@ -482,7 +483,6 @@ pos_edges_l_n, false_edges_l_n = mask_edges_prd_new(adj_time_list, adj_orig_dens
 
 # In[7]:
 
-
 # creating edge list
 
 edge_idx_list = []
@@ -490,6 +490,7 @@ edge_idx_list = []
 for i in range(len(train_edges_l)):
     edge_idx_list.append(torch.tensor(np.transpose(train_edges_l[i]), dtype=torch.long))
 
+# list of length 10, each edge_idx in edge_idx_list is a tensor of size (2, num_edges)
 
 # In[8]:
 
