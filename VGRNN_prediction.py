@@ -877,12 +877,12 @@ class VGRNN(nn.Module):
             phi_x_t = self.phi_x(x[t])
             
             #encoder
-            enc_t = self.enc(torch.cat([phi_x_t, h[-1]], 1), edge_idx_list[t])
-            enc_mean_t = self.enc_mean(enc_t, edge_idx_list[t])
+            enc_t = self.enc(torch.cat([phi_x_t, h[-1]], 1), edge_idx_list[t]) # l_j^{(t)} = GNN_j(), the random parameter of q(Z|X)
+            enc_mean_t = self.enc_mean(enc_t, edge_idx_list[t]) # q(Z|X)
             enc_std_t = self.enc_std(enc_t, edge_idx_list[t])
             
             #prior
-            prior_t = self.prior(h[-1])
+            prior_t = self.prior(h[-1]) # eq (2), time-dependent prior p(Z)
             prior_mean_t = self.prior_mean(prior_t)
             prior_std_t = self.prior_std(prior_t)
             
@@ -891,7 +891,7 @@ class VGRNN(nn.Module):
             phi_z_t = self.phi_z(z_t)
             
             #decoder
-            dec_t = self.dec(z_t)
+            dec_t = self.dec(z_t) # eq (8)
             
             #recurrence
             _, h = self.rnn(torch.cat([phi_x_t, phi_z_t], 1), edge_idx_list[t], h)
