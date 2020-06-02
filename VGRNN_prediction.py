@@ -519,7 +519,7 @@ class GCNConv(MessagePassing):
         glorot(self.weight)
         zeros(self.bias)
 
-    def forward(self, x, edge_index, edge_weight=None):
+    def forward(self, x, edge_index, edge_weight=None): # seems that edge_weight is never used TODO: check if edge_weight is used
         if edge_weight is None:
             edge_weight = torch.ones(
                 (edge_index.size(1), ), dtype=x.dtype, device=x.device)
