@@ -442,7 +442,7 @@ def mask_edges_prd_new(adjs_list, adj_orig_dense_list):
 
 # loading data
 
-# # Enron dataset
+# # Enron dataset (184 nodes)
 # with open('data/enron10/adj_time_list.pickle', 'rb') as handle:
 #     # adj_time_list = pickle.load(handle)
 #     adj_time_list = pickle.load(handle, encoding="latin1")
@@ -460,7 +460,7 @@ with open('data/dblp/adj_orig_dense_list.pickle', 'rb') as handle:
     adj_orig_dense_list = pickle.load(handle, encoding="bytes")
 # list of 10 tensors with size [315, 315]
 
-# # Facebook dataset
+# # Facebook dataset (663 nodes)
 # with open('data/fb/adj_time_list.pickle', 'rb') as handle:
 #     adj_time_list = pickle.load(handle, encoding="latin1")
 #
@@ -1009,7 +1009,7 @@ seq_start = 0
 seq_end = seq_len - 3
 tst_after = 0
 
-for k in range(3):
+for k in range(1000):
     optimizer.zero_grad()
     start_time = time.time()
     kld_loss, nll_loss, _, _, hidden_st = model(x_in[seq_start:seq_end]
