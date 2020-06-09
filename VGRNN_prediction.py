@@ -1019,7 +1019,7 @@ for k in range(1000):
     loss.backward()
     optimizer.step()
     
-    nn.utils.clip_grad_norm(model.parameters(), clip)
+    nn.utils.clip_grad_norm_(model.parameters(), clip)
     
     if k>tst_after:
         _, _, enc_means, pri_means, _ = model(x_in[seq_end:seq_len]
