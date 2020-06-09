@@ -442,23 +442,23 @@ def mask_edges_prd_new(adjs_list, adj_orig_dense_list):
 
 # loading data
 
-# # Enron dataset (184 nodes)
-# with open('data/enron10/adj_time_list.pickle', 'rb') as handle:
-#     # adj_time_list = pickle.load(handle)
-#     adj_time_list = pickle.load(handle, encoding="latin1")
-#
-# with open('data/enron10/adj_orig_dense_list.pickle', 'rb') as handle:
-#     adj_orig_dense_list = pickle.load(handle, encoding="bytes")
-
-
-# COLAB dataset
-with open('data/dblp/adj_time_list.pickle', 'rb') as handle:
+# Enron dataset (184 nodes)
+with open('data/enron10/adj_time_list.pickle', 'rb') as handle:
+    # adj_time_list = pickle.load(handle)
     adj_time_list = pickle.load(handle, encoding="latin1")
-# list of 10 sparse tensors with size [315, 315]
 
-with open('data/dblp/adj_orig_dense_list.pickle', 'rb') as handle:
+with open('data/enron10/adj_orig_dense_list.pickle', 'rb') as handle:
     adj_orig_dense_list = pickle.load(handle, encoding="bytes")
-# list of 10 tensors with size [315, 315]
+
+
+# # COLAB dataset
+# with open('data/dblp/adj_time_list.pickle', 'rb') as handle:
+#     adj_time_list = pickle.load(handle, encoding="latin1")
+# # list of 10 sparse tensors with size [315, 315]
+
+# with open('data/dblp/adj_orig_dense_list.pickle', 'rb') as handle:
+#     adj_orig_dense_list = pickle.load(handle, encoding="bytes")
+# # list of 10 tensors with size [315, 315]
 
 # # Facebook dataset (663 nodes)
 # with open('data/fb/adj_time_list.pickle', 'rb') as handle:
