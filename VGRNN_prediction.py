@@ -982,7 +982,7 @@ conv_type='GCN'
 
 
 # creating input tensors
-
+# each input frame x_temp is a tensor of $N_t\times M$, here $M = N_t$, i.e., the node attribute is an one-hot encoding
 x_in_list = []
 for i in range(0, seq_len):
     x_temp = torch.tensor(np.eye(num_nodes).astype(np.float32))
